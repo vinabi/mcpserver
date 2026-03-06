@@ -13,12 +13,10 @@ spring:
       enabled: true
   application:
     name: unicorn-store-spring
-
   # Disable JMX to reduce memory footprint in containers
   jmx:
     enabled: false
-
-# === Database Configuration ===
+    # === Database Configuration ===
   datasource:
     username: postgres
     # HikariCP pool optimized for containers with limited resources
@@ -32,13 +30,11 @@ spring:
       data-source-properties:
         # Disable prepared statement caching for simpler connection management
         prepared-statement-cache-queries: 0
-
   # Initialize schema on startup
   sql:
     init:
       mode: always
-
-# === JPA/Hibernate Configuration ===
+      # === JPA/Hibernate Configuration ===
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     # Disable Open Session in View anti-pattern
@@ -51,18 +47,21 @@ spring:
         boot:
           # Skip JDBC metadata lookup for faster startup
           "[allow_jdbc_metadata_access]": false
-
+  ai:
+    mcp:
+      server:
+        name: unicorn-store-spring
+        version: 1.0.0
+        protocol: STREAMABLE
 # === Server Configuration ===
 server:
   # Graceful shutdown for container orchestration
   shutdown: graceful
-
 # === Web Configuration ===
 spring.web:
   error:
     # Include error messages in responses for debugging
     include-message: always
-
 # === Actuator/Management Configuration ===
 management:
   endpoints:
@@ -70,7 +69,6 @@ management:
       exposure:
         # Expose endpoints needed for monitoring and debugging
         include: health,info,prometheus,threaddump
-
   endpoint:
     health:
       # Enable Kubernetes-style health probes
@@ -86,10 +84,12 @@ management:
     prometheus:
       # Allow unauthenticated access to metrics endpoint
       access: unrestricted
-
   # Metrics configuration for observability
   metrics:
     enable:
       all: true
     tags:
       application: unicorn-store-spring
+logging:
+  level:
+    org.springframework.ai: DEBUG
